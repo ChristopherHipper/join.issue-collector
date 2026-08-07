@@ -37,7 +37,7 @@ function succeedRegistration() {
  * 
  */
 function fowarding() {
-    window.location.href = "../index.html";
+    window.location.href = "./login.html";
 };
 
 /**

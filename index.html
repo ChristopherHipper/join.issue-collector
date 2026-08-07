@@ -6,54 +6,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Join | Login</title>
     <link rel="shortcut icon" href="../assets/icons/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="./styles/landing-page.css">
     <link rel="stylesheet" href="./styles/assets.css">
     <link rel="stylesheet" href="./styles/style.css">
     <link rel="stylesheet" href="./styles/login-signup.css">
-    <script src="./js/data.js"></script>
     <script src="./js/login.js"></script>
 </head>
 
-<body onload="init()">
+<body onload="initIndex()">
     <div id="animation" class="animation">
-        <img class="animation-logo logo" src="./assets/icons/Join-main-logo.png" alt="">
+        <img class="animation-logo logo" src="./assets/icons/join-logo.png" alt="">
     </div>
-    <header>
-        <img class="logo" src="./assets/icons/Join-main-logo.png" alt="Join Logo">
-        <div class="header-signup">
-            <span class="signup-span">Not a Join user?</span>
-            <a href="./html/sign_up.html"><button class="sign-btn">Sign up</button></a>
-        </div>
+     <header class="landing__header">
+        <img class="logo" src="./assets/icons/join-logo.png" alt="Join Logo">
     </header>
-    <main> 
-        <div class="form-container">
-            <h1>Log in</h1>
-            <div class="seperator"></div>
-            <div class="log-in-container">
-                <div id="mail-container" class="input-container">
-                    <input onclick="removeRedBorder()" id="mail" placeholder="Email" type="email">
-                    <img class="icon-mail" src="./assets/icons/mail.png" alt="Mail icon">
+    <main>
+        <section class="landing">
+            <h1 class="landing__headline">Welcome</h1>
+            <seperator class="landing__seperator"></seperator>
+            <p class="landing__text">Pick the option that suits your role: create a request as a stakeholder or log in
+                if you’re part of the
+                team.
+            </p>
+            <div class="wrapper flex gap-64">
+                <div class="wrapper">
+                    <div class="flex margin-bottom">
+                        <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M2.1 20C1.5225 20 1.02813 19.7939 0.616875 19.3816C0.205625 18.9693 0 18.4737 0 17.8947V6.31579C0 5.73684 0.205625 5.24123 0.616875 4.82895C1.02813 4.41667 1.5225 4.21053 2.1 4.21053H6.3V2.10526C6.3 1.52632 6.50562 1.0307 6.91687 0.618421C7.32812 0.20614 7.8225 0 8.4 0H12.6C13.1775 0 13.6719 0.20614 14.0831 0.618421C14.4944 1.0307 14.7 1.52632 14.7 2.10526V4.21053H18.9C19.4775 4.21053 19.9719 4.41667 20.3831 4.82895C20.7944 5.24123 21 5.73684 21 6.31579V17.8947C21 18.4737 20.7944 18.9693 20.3831 19.3816C19.9719 19.7939 19.4775 20 18.9 20H2.1ZM2.1 17.8947H18.9V6.31579H2.1V17.8947ZM8.4 4.21053H12.6V2.10526H8.4V4.21053Z"
+                                fill="#177DA8" />
+                        </svg>
+                        <p>Are you a stakholer?</p>
+                    </div>
+                    <button class="btn btn__request">Create request</button>
                 </div>
-                <div id="password-container" class="input-container margin-top">
-                    <input onclick="removeRedBorder()" onkeyup="updatePasswordState()" id="password"
-                        placeholder="Password" type="password">
-                    <img onclick="togglePasswordVisibility()" id="password-icon" class="icon-pw"
-                        src="./assets/icons/pw-lock.png" alt="PW locked">
-                </div>
-                <div class="warning-container">
-                    <span class="warning d_none" id="warning">Check your email and password. Please try again</span>
+                <div class="wrapper">
+                    <div class="flex margin-bottom">
+                        <svg width="25" height="19" viewBox="0 0 25 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M0 15C0 14.3561 0.16572 13.7642 0.497159 13.2244C0.828598 12.6847 1.26894 12.2727 1.81818 11.9886C2.99242 11.4015 4.18561 10.9612 5.39773 10.6676C6.60985 10.3741 7.84091 10.2273 9.09091 10.2273C10.3409 10.2273 11.572 10.3741 12.7841 10.6676C13.9962 10.9612 15.1894 11.4015 16.3636 11.9886C16.9129 12.2727 17.3532 12.6847 17.6847 13.2244C18.0161 13.7642 18.1818 14.3561 18.1818 15V15.9091C18.1818 16.5341 17.9593 17.0691 17.5142 17.5142C17.0691 17.9593 16.5341 18.1818 15.9091 18.1818H2.27273C1.64773 18.1818 1.11269 17.9593 0.667614 17.5142C0.222538 17.0691 0 16.5341 0 15.9091V15ZM22.7273 18.1818H19.8295C20.0379 17.8409 20.1941 17.4763 20.2983 17.0881C20.4025 16.6998 20.4545 16.3068 20.4545 15.9091V14.7727C20.4545 13.9394 20.2225 13.1392 19.7585 12.3722C19.2945 11.6051 18.6364 10.947 17.7841 10.3977C18.75 10.5114 19.6591 10.7055 20.5114 10.9801C21.3636 11.2547 22.1591 11.5909 22.8977 11.9886C23.5795 12.3674 24.1004 12.7888 24.4602 13.2528C24.8201 13.7169 25 14.2235 25 14.7727V15.9091C25 16.5341 24.7775 17.0691 24.3324 17.5142C23.8873 17.9593 23.3523 18.1818 22.7273 18.1818ZM9.09091 9.09091C7.84091 9.09091 6.77083 8.64583 5.88068 7.75568C4.99053 6.86553 4.54545 5.79545 4.54545 4.54545C4.54545 3.29545 4.99053 2.22538 5.88068 1.33523C6.77083 0.445076 7.84091 0 9.09091 0C10.3409 0 11.411 0.445076 12.3011 1.33523C13.1913 2.22538 13.6364 3.29545 13.6364 4.54545C13.6364 5.79545 13.1913 6.86553 12.3011 7.75568C11.411 8.64583 10.3409 9.09091 9.09091 9.09091ZM20.4545 4.54545C20.4545 5.79545 20.0095 6.86553 19.1193 7.75568C18.2292 8.64583 17.1591 9.09091 15.9091 9.09091C15.7008 9.09091 15.4356 9.06723 15.1136 9.01989C14.7917 8.97254 14.5265 8.92045 14.3182 8.86364C14.8295 8.25758 15.2225 7.58523 15.4972 6.84659C15.7718 6.10795 15.9091 5.34091 15.9091 4.54545C15.9091 3.75 15.7718 2.98295 15.4972 2.24432C15.2225 1.50568 14.8295 0.833333 14.3182 0.227273C14.5833 0.132576 14.8485 0.0710227 15.1136 0.0426136C15.3788 0.0142045 15.6439 0 15.9091 0C17.1591 0 18.2292 0.445076 19.1193 1.33523C20.0095 2.22538 20.4545 3.29545 20.4545 4.54545ZM2.27273 15.9091H15.9091V15C15.9091 14.7917 15.857 14.6023 15.7528 14.4318C15.6487 14.2614 15.5114 14.1288 15.3409 14.0341C14.3182 13.5227 13.286 13.1392 12.2443 12.8835C11.2027 12.6278 10.1515 12.5 9.09091 12.5C8.0303 12.5 6.97917 12.6278 5.9375 12.8835C4.89583 13.1392 3.86364 13.5227 2.84091 14.0341C2.67045 14.1288 2.53314 14.2614 2.42898 14.4318C2.32481 14.6023 2.27273 14.7917 2.27273 15V15.9091ZM9.09091 6.81818C9.71591 6.81818 10.2509 6.59564 10.696 6.15057C11.1411 5.70549 11.3636 5.17045 11.3636 4.54545C11.3636 3.92045 11.1411 3.38542 10.696 2.94034C10.2509 2.49527 9.71591 2.27273 9.09091 2.27273C8.46591 2.27273 7.93087 2.49527 7.4858 2.94034C7.04072 3.38542 6.81818 3.92045 6.81818 4.54545C6.81818 5.17045 7.04072 5.70549 7.4858 6.15057C7.93087 6.59564 8.46591 6.81818 9.09091 6.81818Z"
+                                fill="#1A8DBE" />
+                        </svg>
+                        <p>Are you a team member?</p>
+                    </div>
+                    <button onclick="logInDirection()" class="btn btn__member">Member log in</button>
                 </div>
             </div>
-            <div class="button-container">
-                <button onclick="logIn()" class="login-btn">Log in</button>
-                <button onclick="guestLogIn()" class="guest-btn">Guest Log in</button>
-            </div>
-        </div>
+        </section>
     </main>
-    <div class="header-signup-resp">
-        <span class="signup-span">Not a Join user?</span>
-        <a href="./html/sign_up.html"><button class="sign-btn">Sign up</button></a>
-    </div>
-    <footer>
+    <footer class="landing-footer">
         <div class="footer-content">
             <a href="./html/privacy_policy.html">Privacy Policy</a>
             <a href="./html/legal_notice.html">Legal notice</a>
