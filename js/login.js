@@ -141,6 +141,10 @@ function logInDirection() {
     window.location.href = "../html/login.html";
 }
 
+function stakholderDirection() {
+    window.location.href = "../html/stakholder.html";
+}
+
 function initIndex() {
     const timeout = setTimeout(closeLoader, 1500);
 }
