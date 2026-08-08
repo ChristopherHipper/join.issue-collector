@@ -11,8 +11,6 @@ async function fetchInit() {
     await fetchTasks();
     await fetchUsers();
     await fetchContacts();
-    console.log(apiKey);
-    
 }
 
 /**

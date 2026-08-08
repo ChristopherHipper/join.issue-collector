@@ -7,7 +7,6 @@ let currentUser;
  * 
  */
 async function init() {
-    const timeout = setTimeout(closeLoader, 2500);
     await fetchUsers();
 };
 
@@ -26,7 +25,7 @@ function logIn() {
     let passwordRef = document.getElementById('password');
     currentUser = users.find((user) => user.email == emailRef.value && user.password == passwordRef.value);
     if (currentUser) {
-        window.location.href = "./html/summary.html";
+        window.location.href = "./summary.html";
         safeToLocalStorage();
     } else {
         wrongMailandPassword(emailRef, passwordRef);
@@ -137,3 +136,15 @@ function togglePasswordVisibility() {
         passwordIcon.src = `./assets/icons/pw-unvisible.png`
     };
 };
+
+function logInDirection() {
+    window.location.href = "../html/login.html";
+}
+
+function stakholderDirection() {
+    window.location.href = "../html/stakholder.html";
+}
+
+function initIndex() {
+    const timeout = setTimeout(closeLoader, 1500);
+}

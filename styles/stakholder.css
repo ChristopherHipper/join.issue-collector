@@ -1,0 +1,173 @@
+.logo-stakholder {
+    height: 56px;
+    width: 46px;
+    margin-top: 29px;
+    margin-left: 40px;
+}
+
+.request {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+
+}
+
+.request__header {
+    padding: 0px 160px;
+}
+
+.request__img {
+    max-height: 280px;
+    width: min(50%, 416px);
+    align-self: center;
+}
+
+.request__content {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    width: min(90%, 1000px);
+}
+
+.request__headline {
+    color: #2A3647;
+}
+
+.request__wrapper {
+    display: flex;
+    gap: 48px;
+}
+
+.request__counter {
+    color: #177DA8;
+    font-size: 19px;
+}
+
+.request__headingtext {
+    color: #42526E;
+    font-size: 28px;
+    margin-bottom: 40px;
+}
+
+.request__explanation {
+    color: #42526E;
+    font-size: 19px;
+}
+
+.btn {
+    font-size: 23px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 400;
+}
+
+.btn__request {
+    display: flex;
+    background-color: #177DA8;
+    color: #FFFFFF;
+    align-self: flex-start;
+}
+
+.btn__request:hover {
+    background-color: #2A3647;
+    box-shadow: 0 4px 4px 0 #00000040;
+}
+
+a:hover {
+    color: #FFFFFF;
+}
+
+.arrow-mobile {
+    display: none;
+}
+
+.counter-mobile {
+    display: none;
+}
+
+    .btn-mobile {
+        display: none;
+    }
+
+    .btn-desktop {
+        display: flex;
+    }
+
+@media (max-width: 864px) {
+    .request {
+        gap: 8px;
+    }
+
+    .request__wrapper {
+        flex-direction: column-reverse;
+    }
+
+    .request__content {
+        gap: 24px;
+    }
+
+    .request__img {
+        width: min(90%, 416px);
+    }
+
+    .request__headline {
+        font-size: 40px;
+    }
+
+    .request__headingtext {
+        color: #42526E;
+        font-size: 22px;
+        margin-bottom: 24px;
+    }
+
+    .request__explanation {
+        font-size: 16px;
+    }
+
+    .arrow-desktop {
+        display: none;
+    }
+
+    .arrow-mobile {
+        display: flex;
+    }
+
+    .request__header {
+        display: none;
+    }
+
+    .headline-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 64px;
+    }
+
+    .counter-mobile {
+        display: flex;
+    }
+
+    .ceck-btn {
+        display: none;
+    }
+
+    .btn {
+        font-size: 16px;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: 400;
+    }
+
+    .btn-mobile {
+        display: flex;
+    }
+
+    .btn-desktop {
+        display: none;
+    }
+
+    .footer-content{
+     padding-top: 32px;   
+    }
+}
