@@ -41,13 +41,20 @@ function highlightLink() {
 function renderTasks(contacts) {
     for (let taskIndex = 0; taskIndex < tasks.length; taskIndex++) {
         if (tasks[taskIndex].status == "toDo") {
-            renderTaskToDo(taskIndex, contacts);}
+            renderTaskToDo(taskIndex, contacts);
+        }
         else if (tasks[taskIndex].status == "inProgress") {
-            renderTaskInProgress(taskIndex, contacts);}
+            renderTaskInProgress(taskIndex, contacts);
+        }
         else if (tasks[taskIndex].status == "await") {
-            renderTaskAwait(taskIndex, contacts);}
+            renderTaskAwait(taskIndex, contacts);
+        }
         else if (tasks[taskIndex].status == "done") {
-            renderDone(taskIndex, contacts);}
+            renderDone(taskIndex, contacts);
+        }
+        else if (tasks[taskIndex].status == "triage") {
+            renderTriage(taskIndex, contacts);
+        }
     }
     renderDropZones();
 }
@@ -60,6 +67,9 @@ function clearBoardTable() {
     document.getElementById("taskInProgress").innerHTML = "";
     document.getElementById("taskAwaitFeedback").innerHTML = "";
     document.getElementById("taskDone").innerHTML = "";
+    document.getElementById("taskTriage").innerHTML = "";
+    document.getElementById("emptyTask-1").classList.remove("d_none");
+    document.getElementById("emptyTask-1").classList.add("emptyTask");
     document.getElementById("emptyTask0").classList.remove("d_none");
     document.getElementById("emptyTask0").classList.add("emptyTask");
     document.getElementById("emptyTask1").classList.remove("d_none");
@@ -163,6 +173,20 @@ function renderDone(taskIndex, contacts) {
     enableTouchDrag(cardElement, taskIndex);
 }
 
+function renderTriage(taskIndex, contacts) {
+    const empty = document.getElementById("emptyTask-1");
+    empty.classList.remove("emptyTask");
+    empty.classList.add("d_none");
+    const container = document.getElementById("taskTriage");
+    container.insertAdjacentHTML("beforeend", renderCard(taskIndex));
+    findBackgroundColor(taskIndex);
+    getSubtasks(taskIndex);
+    getAssignedTo(taskIndex, contacts);
+    getPriority(taskIndex);
+    const cardElement = document.getElementById(`card${taskIndex}`);
+    enableTouchDrag(cardElement, taskIndex);
+}
+
 
 /**
  * This function finds the background color for the initials of the contacts, which are
@@ -236,7 +260,8 @@ function getSubtaskIndex(taskIndex) {
                 done: value.done
             });
         });
-    }}
+    }
+}
 
 /**
  * This function finds the task priority and renders it into the task card
@@ -300,16 +325,20 @@ function establishInitials(taskIndex, contacts, full) {
     const contentPlace = document.getElementById("taskAssignment" + taskIndex);
     for (let index = 0; index < assignedTo.length; index++) {
         if (index == 5 && !full) {
-            contentPlace.innerHTML = moreMemberCardTemplate(); return}
+            contentPlace.innerHTML = moreMemberCardTemplate(); return
+        }
         let name = assignedTo[index];
         let parts = name.split(' ');
         let initials = '';
         for (let i = 0; i < parts.length; i++) {
             if (parts[i].length > 0 && parts[i] !== '') {
-                initials += parts[i][0]}}
+                initials += parts[i][0]
+            }
+        }
         document.getElementById("assignedTo#" + taskIndex).innerHTML += renderInitials(taskIndex, initials, index);
         getAssignedToVariants(taskIndex, initials, index, contacts);
-    }}
+    }
+}
 
 /**
  * This function is used to find the peviously saved color variant for the assigned contact

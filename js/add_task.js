@@ -81,6 +81,7 @@ function cancelTask() {
  * @param {string} priority - the selected priority
  */
 function pushTask(title, description, dueDate, category, priority) {
+    let userName = localStorage.getItem("user");
     let newTask = ({
         assigned_to: assignedMembers,
         category: category,
@@ -88,7 +89,10 @@ function pushTask(title, description, dueDate, category, priority) {
         description: description,
         name: title,
         priority: priority,
-        status: "toDo",
+        status: "triage",
+        username: userName,
+        extern: false,
+        ai_generated: false,
         subtasks: getSubTasks()
     });
     postData(newTask);

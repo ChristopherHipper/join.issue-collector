@@ -93,6 +93,10 @@ a:hover {
         display: flex;
     }
 
+.footer-content a:hover{
+    color: #177DA8;
+}
+
 @media (max-width: 864px) {
     .request {
         gap: 8px;
