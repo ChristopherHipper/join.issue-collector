@@ -2,13 +2,25 @@ function renderTaskOverlay(taskIndex) {
     return `
         <div id="cardOverlay" class="cardOverlay">
             <div id="cardOverlay" class="cardOverlayInner">
-                <div class="taskCategoryDiv"><div id="taskCategory${"#" + taskIndex}" class="taskOverlayCategory">${tasks[taskIndex].category}</div><div class="closeImg" onclick="closeOverlay()"></div></div>
+                <div class="taskCategoryDiv">
+                    <div id="taskCategory${"#" + taskIndex}" class="taskOverlayCategory">${tasks[taskIndex].category}</div>
+                    <div id="taskAI${"#" + taskIndex}" class="taskOverlayAI"></div>
+                    <div class="closeImg" onclick="closeOverlay()"></div>
+                </div>
                 <div id="taskName" class="taskOverlayName">${tasks[taskIndex].name}</div>
                 <div id="taskDescription" class="taskOverlayDescription">${tasks[taskIndex].description}</div>
                 <div class="dueDateOverlay">   
                     <p class="fontSize20">Due date:</p>
                     <div class="dueDateOverlayDiv">${tasks[taskIndex].date.slice(0, 10).split('-').reverse().join('/')}</div>
                 </div>
+
+                <div class="dueDateOverlay">   
+                    <p class="fontSize20">Creator:</p>
+                    <div id="taskCreatorExtern${"#" + taskIndex}" class="creator-extern"></div>
+                    <p class="username">${tasks[taskIndex].username.split(',')}</p>
+                    <button id="taskCreatorMail${"#" + taskIndex}" class="creator-contact"></button>
+                </div>
+
                 <div class="priorityOverlay">
                     <p class="fontSize20">Priority:</p>
                     <div id="priority${"#" + taskIndex}" class="priorityOverlayDiv"></div>

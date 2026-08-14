@@ -91,14 +91,13 @@ body {
     background-color: #FFFFFF;
     border-radius: 20px;
     box-shadow: 1px 1px 5px #00000025;
-    width: 100%;
-    max-width: 560px;
+    width: 364px;
     height: 138px;
     margin-bottom: 30px;
     margin-top: 30px;
     transition: transform 0.2s ease;
     cursor: pointer;
-    gap: 47px;
+    justify-content: space-around;
 }
 
 .summary-content-div-row2:hover {
@@ -200,7 +199,7 @@ body {
 }
 
 .date-informations {
-    font-size: 21px;
+    font-size: 20px;
     font-weight: 700;
 }
 
@@ -223,6 +222,9 @@ body {
 
 .row-2-container {
     display: flex;
+    align-items: center;
+    gap: 24px;
+    justify-content: space-between;
 }
 
 .row-3-container {
@@ -233,6 +235,17 @@ body {
 .stopScrolling {
     height: 100vh;
     overflow-y: hidden;
+}
+
+.urgant-p {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.mail-request-number {
+    background-image: linear-gradient(#8933FC, #29ABE2);
+    color: transparent;
+    background-clip: text;
 }
 
 @media (max-width: 1350px) {
@@ -308,6 +321,18 @@ body {
 }
 
 @media (max-width: 630px) {
+    .row-3-container {
+        gap: 24px;
+    }
+
+    .row-2-container {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        justify-content: space-between;
+        max-width: 396px;
+    }
+
     .avatar {
         width: 40px !important;
         height: 40px !important;
@@ -344,9 +369,11 @@ body {
     }
 
     .summary-content-div-row2 {
-        width: 396px;
+        width: 260px;
         height: 110px;
-        gap: 22px;
+        gap: 6px;
+        padding-left: 8px;
+        padding-right: 8px;
     }
 
     .summary-content-div-row3 {
@@ -381,9 +408,9 @@ body {
     }
 
     .summary-content-div-row1:hover .icon-check {
-    width: 40px;
-    height: 40px;
-}
+        width: 40px;
+        height: 40px;
+    }
 
     .task-informations {
         font-size: 47px;
@@ -403,11 +430,5 @@ body {
 
     .user-name {
         font-size: 47px;
-    }
-}
-
-@media (max-width: 370px) {
-    .summary-content-div-row2 {
-        gap: 12px;
     }
 }

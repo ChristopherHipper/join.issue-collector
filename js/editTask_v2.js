@@ -157,6 +157,9 @@ async function pushTask(title, description, dueDate, category, priority, taskInd
         name: title,
         priority: priority,
         status: tasks[taskIndex].status,
+        ai_generated: tasks[taskIndex].ai_generated,
+        username: tasks[taskIndex].username,
+        extern: tasks[taskIndex].extern,
         subtasks: subtasksArray
     });
     currentTaskPath = BASE_URL + "tasks/" + Object.keys(taskResponse)[taskIndex];

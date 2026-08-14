@@ -15,6 +15,9 @@ function loadTaskOverlayData(taskIndex) {
     getOverlaySubtasks(taskIndex);
     getAssignedTo(taskIndex, contacts, full);
     getAssignedToNames(taskIndex, contacts);
+    getAIstate(taskIndex);
+    getExternstate(taskIndex);
+    getMailstate(taskIndex);
     getPriority(taskIndex);
     document.getElementById("priority#" + taskIndex).innerHTML += tasks[taskIndex].priority.charAt(0).toUpperCase() + tasks[taskIndex].priority.slice(1);
 }
