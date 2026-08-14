@@ -82,6 +82,7 @@ function cancelTask() {
  */
 function pushTask(title, description, dueDate, category, priority) {
     let userName = localStorage.getItem("user");
+    userName = userName?.replace(/['"]/g, "");
     let newTask = ({
         assigned_to: assignedMembers,
         category: category,

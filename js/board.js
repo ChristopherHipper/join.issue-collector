@@ -23,6 +23,8 @@ async function initboard() {
     clearBoardTable();
     renderTasks(contacts);
     highlightLink();
+    console.log(tasks);
+    
 }
 
 /**
@@ -276,6 +278,36 @@ function getPriority(taskIndex) {
         document.getElementById("priority#" + taskIndex).innerHTML = renderPriority(taskIndex, cardPriority);
     } else {
         document.getElementById("priority#" + taskIndex).innerHTML = renderPriority(taskIndex, cardPriority);
+    }
+}
+
+function getAIstate(taskIndex) {
+    let isAigenerated = tasks[taskIndex].ai_generated;
+    
+    if (isAigenerated) {
+        document.getElementById("taskAI#" + taskIndex).innerHTML = renderAI(taskIndex);
+    } else{
+        document.getElementById("taskAI#" + taskIndex).innerHTML = "";
+    }
+}
+
+function getExternstate(taskIndex) {
+    let isExtern = tasks[taskIndex].ai_generated;
+
+    if (isExtern) {
+        document.getElementById("taskCreatorExtern#" + taskIndex).innerHTML = renderExtern(taskIndex);
+    } else{
+        document.getElementById("taskCreatorExtern#" + taskIndex).innerHTML = renderIntern(taskIndex);
+    }
+}
+
+function getMailstate(taskIndex) {
+    let isAigenerated = tasks[taskIndex].ai_generated;
+    
+    if (isAigenerated) {
+        document.getElementById("taskCreatorMail#" + taskIndex).innerHTML = renderMail(taskIndex);
+    } else{
+        document.getElementById("taskCreatorMail#" + taskIndex).innerHTML = renderProfil(taskIndex);
     }
 }
 

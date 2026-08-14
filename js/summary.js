@@ -103,7 +103,7 @@ function renderSecondRow() {
     allUrgents.innerHTML = `${currentUrgent.length}`;
     let urgentDates = [];
     for (let index = 0; index < currentUrgent.length; index++) {
-        urgentDates.push(new Date(currentUrgent[index].date))};
+        urgentDates.push(parseDate(currentUrgent[index].date))};
     const minDate = new Date(Math.min(...urgentDates));
     let urgentDate = document.getElementById('urgant-date');
     urgentDate.innerHTML = minDate.toLocaleDateString('en-US', {
@@ -111,6 +111,11 @@ function renderSecondRow() {
         month: 'long',
         day: 'numeric' });
 };
+
+function parseDate(dateAsString) {
+  const [day, month, year] = dateAsString.split('.');
+  return new Date(year, month - 1, day);
+}
 
 /**
  * Renders the number of "to-does" and "done" tasks and displays them
