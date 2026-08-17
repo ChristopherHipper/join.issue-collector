@@ -53,8 +53,8 @@ function getAssignedToNames(taskIndex, contacts) {
     for (let index = 0; index < searchWord.length; index++) {
         let initialsToCompare = searchWord[index].innerText.trim().toUpperCase();
         let assignedToNamesIndex = contacts.findIndex(v => getInitialsOverlay(v.name).toUpperCase() === initialsToCompare);
-        let assignedToName = "";
-        editAssignedToName(assignedToNamesIndex, assignedToName, searchWord, index, contacts);
+        name = tasks[taskIndex].assigned_to[index]
+        editAssignedToName(assignedToNamesIndex, name, searchWord, index, contacts);   
     }
 }
 
@@ -88,7 +88,6 @@ function editAssignedToName(assignedToNamesIndex, assignedToName, searchWord, in
         alert("Contact is not registered yet!");
         return;
     }
-    assignedToName = contacts[assignedToNamesIndex].name;
     establishRenderAssignedToName(assignedToNamesIndex, assignedToName, searchWord, index);
 }
 

@@ -9,14 +9,16 @@ function initValidation() {
     const dueDate = document.getElementById("datepicker");
     const category = document.getElementById("selected-Category");
     if (!title || !dueDate || !category || !submitButton) {
-        console.warn("No formula elements found."); return; };
+        console.warn("No formula elements found."); return;
+    };
     if (validationInterval !== null) return;
     validationInterval = setInterval(() => {
         const isValid =
             title.value.trim() !== "" &&
             dueDate.value.trim() !== "" &&
             category.innerHTML !== "Select Task Category";
-        submitButton.disabled = !isValid; }, 200);
+        submitButton.disabled = !isValid;
+    }, 200);
 };
 
 /**
@@ -78,15 +80,15 @@ function checkTitle() {
  * This function checks the input of the add task dueDate onfocusout
  */
 function checkDate() {
-  const input = document.getElementById('datepicker');
-  const warningText = document.getElementById('warning-datepicker');
-  if (input.value === '') {
-    getRedBorder(input);
-  } else {
-    input.classList.remove('red-border');
-    warningText.classList.add('d_none');
-  }
-  checkInputs();
+    const input = document.getElementById('datepicker');
+    const warningText = document.getElementById('warning-datepicker');
+    if (input.value === '') {
+        getRedBorder(input);
+    } else {
+        input.classList.remove('red-border');
+        warningText.classList.add('d_none');
+    }
+    checkInputs();
 }
 
 /**
@@ -109,7 +111,7 @@ function checkCategory() {
     let categoryInput = document.getElementById('selected-Category');
     let warningText = document.getElementById('warning-category');
     let selectableRef = document.getElementById("category-list");
-    if (categoryInput.innerHTML === 'Select Task Category' && !selectableRef.classList.contains('dnone') ){
+    if (categoryInput.innerHTML === 'Select Task Category' && !selectableRef.classList.contains('dnone')) {
         getRedBorder(category);
     } else {
         category.classList.remove('red-border');
@@ -217,3 +219,7 @@ function toggleOverlayTask() {
     }
 };
 
+function handleCreator(index) {
+    creator = tasks[index].username;
+    window.location.href = `./contacts.html?creator=${creator}`;
+}

@@ -234,11 +234,13 @@ if (isRealIOS()) {
 async function removeContactFromTasks(name) {
   for (let index = 0; index < taskContactIsIncluded.length; index++) {
     let currentContactIndex = taskContactIsIncluded[index].assigned_to.indexOf(name)
-    let currentTaskPath = BASE_URL + "tasks/" + taskContactIsIncluded[index].firebaseKey + "/assigned_to/" + currentContactIndex;
+    taskContactIsIncluded[index].assigned_to.splice(currentContactIndex, 1)
+    let currentTaskPath = BASE_URL + "tasks/" + taskContactIsIncluded[index].firebaseKey + "/assigned_to/";
     let response = await fetch(currentTaskPath + ".json", {
-      method: "DELETE",
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(taskContactIsIncluded[index].assigned_to)
     });
-
   }
 }
 
@@ -254,4 +256,21 @@ function generateName(name) {
       return details.name
     }
   }
+}
+
+function highlightCreator(contacts) {
+  let params = new URLSearchParams(document.location.search);
+  let name = params.get("creator");
+  if (name) {
+    const contact = contacts.find((c) => c[1].name === name)
+    contact ? showContact(contact[1], contact[1].color, contact[0]) : findUserInfos(name);
+    showCurrentContact(contact[0])
+  } else {
+    return
+  }
+}
+
+function findUserInfos(username) {
+  const user = users.find((u) => u.name === username)
+  createNewContact(user.name, user.email, "")
 }

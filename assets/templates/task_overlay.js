@@ -18,7 +18,7 @@ function renderTaskOverlay(taskIndex) {
                     <p class="fontSize20">Creator:</p>
                     <div id="taskCreatorExtern${"#" + taskIndex}" class="creator-extern"></div>
                     <p class="username">${tasks[taskIndex].username.split(',')}</p>
-                    <button id="taskCreatorMail${"#" + taskIndex}" class="creator-contact"></button>
+                    <button onclick="handleCreator(${taskIndex})" id="taskCreatorMail${"#" + taskIndex}" class="creator-contact"></button>
                 </div>
 
                 <div class="priorityOverlay">

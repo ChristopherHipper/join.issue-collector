@@ -24,10 +24,12 @@ let currentEditKey = null;
  * Initializes the contacts module: fetches contacts and highlights the menu link.
  */
 async function initContacts() {
+  await fetchUsers()
   await fetchContacts();
   await fetchTasks();
   initTask();
   highlightLink();
+  highlightCreator(allContacts);
 }
 
 /**
@@ -80,6 +82,7 @@ function renderContacts(contactsData) {
     }
     appendContactElement(list, key, contact);
   });
+  
 }
 
 /**
@@ -187,6 +190,8 @@ function closeEditContact() {
  */
 async function editContact(key, contactName) {
   try {
+    console.log('geht');
+    
     findContactTasks(contactName)
     currentEditName = contactName;
     const contact = await fetchContactByKey(key);
@@ -200,6 +205,7 @@ async function editContact(key, contactName) {
     showEditOverlay(name || "", color);
   } catch (error) { }
   toggleContactsSlider();
+  console.log('gehtnicht');
 }
 
 /**
@@ -209,7 +215,7 @@ async function editContact(key, contactName) {
  */
 function findContactTasks(name) {
   taskContactIsIncluded = tasks.filter((i) => {
-    return i.assigned_to.includes(name)
+    return i.assigned_to?.includes(name)
   })
 }
 
@@ -351,15 +357,14 @@ async function saveEditedContact(updatedContact) {
  * @param {string} key - Contact key.
  */
 async function deleteContact(key) {
-  try {
     let taskName = generateName(key)
     findContactTasks(taskName);
     removeContactFromTasks(taskName);
     await fetch(`${BASE_URL}contacts/${key}.json`, { method: "DELETE" });
     document.getElementById("contactView").innerHTML = errorTamplate();
     await fetchContacts();
-  } catch (error) { }
-  
+    await fetchTasks();
+    //window.location.href = `./contacts.html`;
 }
 
 /**

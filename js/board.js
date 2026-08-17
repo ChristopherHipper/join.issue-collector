@@ -23,8 +23,6 @@ async function initboard() {
     clearBoardTable();
     renderTasks(contacts);
     highlightLink();
-    console.log(tasks);
-    
 }
 
 /**
@@ -90,6 +88,7 @@ function renderDropZones() {
     document.getElementById("taskInProgress").innerHTML += renderDropZone("dropzone#TaskInProgress");
     document.getElementById("taskAwaitFeedback").innerHTML += renderDropZone("dropzone#TaskAwaitFeedback");
     document.getElementById("taskDone").innerHTML += renderDropZone("dropzone#TaskDone");
+    document.getElementById("taskTriage").innerHTML += renderDropZone("dropzone#TaskTriage");
 }
 
 /**
