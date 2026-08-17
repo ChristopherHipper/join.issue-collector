@@ -110,12 +110,12 @@ function updatePasswordState() {
     let passwordIcon = document.getElementById('password-icon');
     if (passwordRef.value.length > 0) {
         if (passwordRef.type === "password") {
-            passwordIcon.src = `./assets/icons/pw-unvisible.png`
+            passwordIcon.src = `../assets/icons/pw-unvisible.png`
         } else {
-            passwordIcon.src = `./assets/icons/pw-visible.png`
+            passwordIcon.src = `../assets/icons/pw-visible.png`
         };
     } else {
-        passwordIcon.src = `./assets/icons/pw-lock.png`
+        passwordIcon.src = `../assets/icons/pw-lock.png`
     };
 };
 
@@ -130,10 +130,10 @@ function togglePasswordVisibility() {
     let passwordIcon = document.getElementById('password-icon');
     if (passwordRef.type === "password" && passwordRef.value.length > 0) {
         passwordRef.type = "text"
-        passwordIcon.src = `./assets/icons/pw-visible.png`
+        passwordIcon.src = `../assets/icons/pw-visible.png`
     } else if (passwordRef.type === "text" && passwordRef.value.length > 0) {
         passwordRef.type = "password"
-        passwordIcon.src = `./assets/icons/pw-unvisible.png`
+        passwordIcon.src = `../assets/icons/pw-unvisible.png`
     };
 };
 

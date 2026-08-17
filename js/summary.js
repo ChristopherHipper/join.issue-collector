@@ -87,6 +87,7 @@ function renderSummary() {
     renderFirstRow();
     renderSecondRow();
     renderThirdRow();
+    renderEmailRequest();
 };
 
 /**
@@ -163,3 +164,9 @@ window.addEventListener('DOMContentLoaded', () => {
         document.body.classList.remove('stopScrolling');
     }, 2000);
 });
+
+function renderEmailRequest() {
+    emailRequestRef = document.getElementById('email-request');
+    const requests = tasks.filter((task) => task.ai_generated === true);
+    emailRequestRef.innerHTML = `${requests.length}`;
+};
