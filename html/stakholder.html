@@ -10,40 +10,38 @@
     <link rel="stylesheet" href="../styles/style.css">
     <link rel="stylesheet" href="../styles/login-signup.css">
     <link rel="stylesheet" href="../styles/stakholder.css">
+    <script src="../js/stakholder.js"></script>
 </head>
 
 <body>
 
     <img class="logo-stakholder" src="../assets/icons/Join-main-logo.png" alt="Join Logo">
     <header class="request__header">
-        <a class="arrow-desktop" href="../index.html"><img class="arrow-img " src="../assets/icons/left-arrow.png" alt="back"></a>
-        <p class="request__counter">0 of 10 requests used Today</p>
+        <a class="arrow-desktop" href="../index.html"><img class="arrow-img " src="../assets/icons/left-arrow.png"
+                alt="back"></a>
+        <p id="counter-text" class="request__counter"><span id="counter"></span> of 10 requests used Today</p>
     </header>
     <main class="request">
         <div class="headline-wrapper">
             <separator></separator>
             <h1 class="request__headline">Welcome</h1>
-            <a class="arrow-mobile" href="../index.html"><img class="arrow-img " src="../assets/icons/left-arrow.png" alt="back"></a>
+            <a class="arrow-mobile" href="../index.html"><img class="arrow-img " src="../assets/icons/left-arrow.png"
+                    alt="back"></a>
         </div>
-        
+
         <section class="request__content">
-            <p class="request__counter counter-mobile">0 of 10 requests used Today</p>
+            <p id="counter-text-mobile" class="request__counter counter-mobile"><span id="counter-mobile"> </span>of 10
+                requests used Today</p>
             <div class="request__wrapper">
                 <div>
-                    <h2 class="request__headingtext">Easily create a ticket by sending an email — no extra steps needed.
+                    <h2 id="heading" class="request__headingtext">
                     </h2>
-                    <p class="request__explanation">On this platform, you can submit your feature requests via email.
-                        Our AI
-                        system will automatically
-                        generate a ticket with a deadline and priority level. <br><br>
-                        A total of 10 requests can be created per day. After this limit, emails can still be sent, but
-                        they
-                        will
-                        be manually reviewed by our team instead of generating AI tickets.</p>
+                    <p id="desc-text" class="request__explanation"></p>
                 </div>
-                <img class="request__img" src="../assets/icons/create-request.png" alt="kanbanboard image">
+
+                <img id="board-img" class="request__img" src="../assets/icons/create-request.png" alt="kanbanboard image">
             </div>
-            <a class="btn btn__request" href="mailto:dev.h.christopher@gmail.com">
+            <a onclick="startRequest()" class="btn btn__request" href="#">
                 <span class="btn-desktop">Create Email Request</span>
                 <span class="btn-mobile">Create Request</span>
                 <img class="ceck-btn" src="../assets/icons/check-btn.png" alt="check">

@@ -97,6 +97,10 @@ a:hover {
     color: #177DA8;
 }
 
+.warning{
+    color: #FF3D00;
+}
+
 @media (max-width: 864px) {
     .request {
         gap: 8px;
@@ -150,6 +154,7 @@ a:hover {
 
     .counter-mobile {
         display: flex;
+        gap: 6px;
     }
 
     .ceck-btn {
