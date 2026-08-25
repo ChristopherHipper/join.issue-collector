@@ -171,6 +171,8 @@ async function addNewToDO() {
  * @param {string} priority - collects the priority from the input field as a string 
  */
 async function pushTaskBoard(title, description, dueDate, category, priority) {
+    let userName = localStorage.getItem("user");
+    userName = userName?.replace(/['"]/g, "");
     let newTask = ({
         assigned_to: assignedMembers,
         category: category,
@@ -178,7 +180,10 @@ async function pushTaskBoard(title, description, dueDate, category, priority) {
         description: description,
         name: title,
         priority: priority,
-        status: "toDo",
+        status: "triage",
+        username: userName,
+        extern: false,
+        ai_generated: false,
         subtasks: subtasksArray
     });
     await postData(newTask);
@@ -219,6 +224,11 @@ function toggleOverlayTask() {
     }
 };
 
+/**
+ * Redirects to the contacts page for the selected creator.
+ *
+ * @param {number} index - The index of the task.
+ */
 function handleCreator(index) {
     creator = tasks[index].username;
     window.location.href = `./contacts.html?creator=${creator}`;

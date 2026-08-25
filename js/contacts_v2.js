@@ -258,19 +258,40 @@ function generateName(name) {
   }
 }
 
+/**
+ * Highlights and displays the creator specified in the URL.
+ *
+ * @param {Array} contacts - The list of available contacts.
+ */
 function highlightCreator(contacts) {
   let params = new URLSearchParams(document.location.search);
   let name = params.get("creator");
   if (name) {
     const contact = contacts.find((c) => c[1].name === name)
-    contact ? showContact(contact[1], contact[1].color, contact[0]) : findUserInfos(name);
-    showCurrentContact(contact[0])
-  } else {
-    return
+    if (contact) {
+      showContact(contact[1], contact[1].color, contact[0])
+      showCurrentContact(contact[0])
+    } else {
+      findUserInfos(name)
+    }
   }
 }
 
+/**
+ * Finds a user by username and creates a new contact from their information.
+ *
+ * @param {string} username - The username to search for.
+ */
 function findUserInfos(username) {
   const user = users.find((u) => u.name === username)
   createNewContact(user.name, user.email, "")
+}
+
+/**
+ * Gets the value of an input field by ID.
+ * @param {string} id - Element ID.
+ * @returns {string} - Trimmed input value.
+ */
+function getInputValue(id) {
+  return document.getElementById(id).value.trim();
 }

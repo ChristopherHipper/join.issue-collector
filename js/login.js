@@ -137,14 +137,26 @@ function togglePasswordVisibility() {
     };
 };
 
+/**
+ * Redirects to the Login page.
+ *
+ */
 function logInDirection() {
     window.location.href = "../html/login.html";
 }
 
+/**
+ * Redirects to the stakeholder page.
+ *
+ */
 function stakholderDirection() {
     window.location.href = "../html/stakholder.html";
 }
 
+/**
+ * Initializes the index page and closes the loader after a delay.
+ *
+ */
 function initIndex() {
     const timeout = setTimeout(closeLoader, 1500);
 }

@@ -6,14 +6,14 @@ function showContact(contact, color, key) {
           ${getInitials(contact.name)}
         </div>
         <div class="contact-name-buttons">
-          <h2>${contact.name}</h2>
+          <h2>${contact.name.slice(0, 20)}</h2>
           <button class="contact-name-buttons-edit" onclick="alertremoveEdit(); editContact('${key}','${contact.name}');">Edit</button>
           <button class="contact-name-buttons-delete" onclick="deleteContact('${key}')">Delete</button>
         </div>
       </div>
       <p class="contact-info-subtitle">Contact Information</p>
       <div class="contact-info-block">        
-        <p><strong>Email:</strong><br><br><a class="contacts-mail" href="mailto:${contact.mail}">${contact.mail}</a></p><br>
+        <p><strong>Email:</strong><br><br><a class="contacts-mail" href="mailto:${contact.mail}">${contact.mail.slice(0, 25)}</a></p><br>
         <p><strong>Phone:</strong><br><br>${contact.phone_number || '-'}</p>
       </div>
     </div>
@@ -35,8 +35,8 @@ function listTamplate(color, contact){
  return `
     <span class="contact-avatar margen-avatar" style="background:${color}">${getInitials(contact.name)}</span>
     <div>
-      <p class="contacts-name">${contact.name}</p>
-      <p class="contacts-mail">${contact.mail}</p>
+      <p class="contacts-name">${contact.name.slice(0, 20)}</p>
+      <p class="contacts-mail">${contact.mail.slice(0, 25)}</p>
     </div>
   `
 }

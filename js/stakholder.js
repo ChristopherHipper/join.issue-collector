@@ -1,12 +1,15 @@
 document.addEventListener("DOMContentLoaded", getWebhook());
 
+/**
+ * Fetches data from the webhook and updates the counter.
+ *
+ */
 function getWebhook() {
     const url = 'http://localhost:5678/webhook/webhook-test';
     fetch(url)
         .then(function (response) { return response.text(); })
         .then(function (text) {
             showCounter(text)
-
         })
         .catch(function (err) {
             document.getElementById('counter').textContent = 'Error: ';
@@ -15,6 +18,11 @@ function getWebhook() {
 
 setInterval(getWebhook, 2000);
 
+/**
+ * Updates the request counter and related UI elements based on the current count.
+ *
+ * @param {number} count - The current number of requests.
+ */
 function showCounter(count) {
     if (count) {
         document.getElementById('board-img').src = '../assets/icons/create-request.png';

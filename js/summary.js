@@ -113,6 +113,12 @@ function renderSecondRow() {
         day: 'numeric' });
 };
 
+/**
+ * Parses a date string into a Date object.
+ *
+ * @param {string} dateAsString - The date in DD.MM.YYYY format.
+ * @returns {Date} The parsed date.
+ */
 function parseDate(dateAsString) {
   const [day, month, year] = dateAsString.split('.');
   return new Date(year, month - 1, day);
@@ -165,6 +171,10 @@ window.addEventListener('DOMContentLoaded', () => {
     }, 2000);
 });
 
+/**
+ * Renders the number of AI-generated email requests.
+ *
+ */
 function renderEmailRequest() {
     emailRequestRef = document.getElementById('email-request');
     const requests = tasks.filter((task) => task.ai_generated === true);

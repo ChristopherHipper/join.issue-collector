@@ -181,3 +181,52 @@ function getStatusMapping() {
         "Done": "done"
     };
 }
+
+/**
+ * This function establishes a random color variant for an unknown contact
+ * 
+ * @returns - The function returns a random color code from the colors array
+ */
+function getRandomColor() {
+    const colors = ["#6E52FF", "#FFA35E", "#FFE62B", "#00BEE8", "#FF5EB3", "#FFBB2B", "#FF745E", "#C3FF2B", "#FF7A00", "#1FD7C1", "#0038FF", "#FFC701", "#9327FF", "#FC71FF", "#FF4646"];
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+
+/**
+ * This function listens to the search input field in the task board to find the wanted
+ * task
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.querySelector('.taskSearchInput');
+    searchInput.addEventListener('input', filterTasks);
+});
+
+/**
+ * This function dynamically searches for tasks which fit to the input objects
+ * 
+ * @param {object} event - This is the search input object
+ */
+function filterTasks(event) {
+    const searchTerm = event.target.value.toLowerCase();
+    const taskCards = document.querySelectorAll('.taskCard');
+    taskCards.forEach(card => {
+        const content = card.innerText.toLowerCase();
+        card.style.display = content.includes(searchTerm) ? 'flex' : 'none';
+    });
+}
+
+/**
+ * This function establishes the found color variant from a known assigned contact
+ * 
+ * @param {number} taskIndex - This is the index number from the tasks array 
+ * @param {string} initials - These are the found initials of the assigned people 
+ * @param {number} index - This is the index number from the assignedTo array 
+ */
+function establishKnownVariant(taskIndex, initials, index) {
+    let searchWord = Object.entries(tasks[taskIndex].assigned_to)[index][1];
+    let colorIndex = contacts.findIndex(v => v.name === searchWord);
+    document.getElementById("assignedToInitial#" + initials + "#" + index + "#" + taskIndex).style.backgroundColor = contacts[colorIndex].color;
+    if (index != 0) {
+        document.getElementById("assignedToInitial#" + initials + "#" + index + "#" + taskIndex).classList.add("positionAddInitials");
+    }
+}

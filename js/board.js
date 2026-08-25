@@ -174,6 +174,12 @@ function renderDone(taskIndex, contacts) {
     enableTouchDrag(cardElement, taskIndex);
 }
 
+/**
+ * Renders a task card in the triage area and initializes its related data.
+ *
+ * @param {number} taskIndex - The index of the task.
+ * @param {Array} contacts - The list of available contacts.
+ */
 function renderTriage(taskIndex, contacts) {
     const empty = document.getElementById("emptyTask-1");
     empty.classList.remove("emptyTask");
@@ -280,6 +286,11 @@ function getPriority(taskIndex) {
     }
 }
 
+/**
+ * Displays the AI-generated status for a task.
+ *
+ * @param {number} taskIndex - The index of the task.
+ */
 function getAIstate(taskIndex) {
     let isAigenerated = tasks[taskIndex].ai_generated;
     
@@ -290,6 +301,11 @@ function getAIstate(taskIndex) {
     }
 }
 
+/**
+ * Renders the creator status based on whether the task was AI-generated.
+ *
+ * @param {number} taskIndex - The index of the task.
+ */
 function getExternstate(taskIndex) {
     let isExtern = tasks[taskIndex].ai_generated;
 
@@ -300,6 +316,11 @@ function getExternstate(taskIndex) {
     }
 }
 
+/**
+ * Renders the creator information based on the task's AI-generated status.
+ *
+ * @param {number} taskIndex - The index of the task.
+ */
 function getMailstate(taskIndex) {
     let isAigenerated = tasks[taskIndex].ai_generated;
     
@@ -392,51 +413,5 @@ function getAssignedToVariants(taskIndex, initials, index, contacts) {
     }
 }
 
-/**
- * This function establishes the found color variant from a known assigned contact
- * 
- * @param {number} taskIndex - This is the index number from the tasks array 
- * @param {string} initials - These are the found initials of the assigned people 
- * @param {number} index - This is the index number from the assignedTo array 
- */
-function establishKnownVariant(taskIndex, initials, index) {
-    let searchWord = Object.entries(tasks[taskIndex].assigned_to)[index][1];
-    let colorIndex = contacts.findIndex(v => v.name === searchWord);
-    document.getElementById("assignedToInitial#" + initials + "#" + index + "#" + taskIndex).style.backgroundColor = contacts[colorIndex].color;
-    if (index != 0) {
-        document.getElementById("assignedToInitial#" + initials + "#" + index + "#" + taskIndex).classList.add("positionAddInitials");
-    }
-}
 
-/**
- * This function establishes a random color variant for an unknown contact
- * 
- * @returns - The function returns a random color code from the colors array
- */
-function getRandomColor() {
-    const colors = ["#6E52FF", "#FFA35E", "#FFE62B", "#00BEE8", "#FF5EB3", "#FFBB2B", "#FF745E", "#C3FF2B", "#FF7A00", "#1FD7C1", "#0038FF", "#FFC701", "#9327FF", "#FC71FF", "#FF4646"];
-    return colors[Math.floor(Math.random() * colors.length)];
-}
 
-/**
- * This function listens to the search input field in the task board to find the wanted
- * task
- */
-document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.querySelector('.taskSearchInput');
-    searchInput.addEventListener('input', filterTasks);
-});
-
-/**
- * This function dynamically searches for tasks which fit to the input objects
- * 
- * @param {object} event - This is the search input object
- */
-function filterTasks(event) {
-    const searchTerm = event.target.value.toLowerCase();
-    const taskCards = document.querySelectorAll('.taskCard');
-    taskCards.forEach(card => {
-        const content = card.innerText.toLowerCase();
-        card.style.display = content.includes(searchTerm) ? 'flex' : 'none';
-    });
-}

@@ -50,6 +50,24 @@ async function moveTo(status) {
     await fetchContacts();
     clearBoardTable();
     renderTasks(contacts);
+    sendMailToCreator(tasks[currentId])
+}
+
+/**
+ * Sends a status update for a task to the creator.
+ *
+ * @param {Object} task - The task to update.
+ */
+function sendMailToCreator(task) {
+    fetch("http://localhost:5678/webhook/status-update", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            taskId: task.firebaseKey,
+        })
+    });
 }
 
 /**

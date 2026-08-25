@@ -56,6 +56,10 @@ function initValidationEdit() {
     }, 200)
 };
 
+/**
+ * Initializes the DOM elements required for task validation.
+ *
+ */
 function establishVariablesForValidation() {
     submitButton = document.getElementById("creatTaskEdit");
     title = document.getElementById("titleEdit");

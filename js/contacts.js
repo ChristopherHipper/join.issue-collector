@@ -190,8 +190,6 @@ function closeEditContact() {
  */
 async function editContact(key, contactName) {
   try {
-    console.log('geht');
-    
     findContactTasks(contactName)
     currentEditName = contactName;
     const contact = await fetchContactByKey(key);
@@ -205,7 +203,6 @@ async function editContact(key, contactName) {
     showEditOverlay(name || "", color);
   } catch (error) { }
   toggleContactsSlider();
-  console.log('gehtnicht');
 }
 
 /**
@@ -408,11 +405,3 @@ async function createNewContact(name, mail, phone) {
   await fetchContacts();
 }
 
-/**
- * Gets the value of an input field by ID.
- * @param {string} id - Element ID.
- * @returns {string} - Trimmed input value.
- */
-function getInputValue(id) {
-  return document.getElementById(id).value.trim();
-}
