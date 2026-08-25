@@ -1,0 +1,198 @@
+{
+  "name": "Join-Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "webhook-test",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -128,
+        48
+      ],
+      "id": "4dd49bed-fef1-4b76-a88d-6e4d51c99389",
+      "name": "Webhook",
+      "webhookId": "98c946cf-042c-4368-84d2-a308f8c74ffe"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.count }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        784,
+        48
+      ],
+      "id": "ef72b5bf-22c0-4329-908b-edb3ed968800",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "vDARYvNLaPxLE6Br",
+          "mode": "list",
+          "cachedResultName": "counter",
+          "cachedResultUrl": "/projects/EhhsDN31Hn4Dskyo/datatables/vDARYvNLaPxLE6Br"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "today",
+              "keyValue": "={{ $json.today }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        576,
+        48
+      ],
+      "id": "d90cf716-14d5-4f0d-a305-31bba328db96",
+      "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = new Date().toISOString().split('T')[0];\n\nreturn [\n  {\n    json: {\n      today,\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        96,
+        48
+      ],
+      "id": "331c1957-85f6-41df-92cd-91b3faca4e23",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "vDARYvNLaPxLE6Br",
+          "mode": "list",
+          "cachedResultName": "counter",
+          "cachedResultUrl": "/projects/EhhsDN31Hn4Dskyo/datatables/vDARYvNLaPxLE6Br"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "today",
+              "keyValue": "={{ $json.today }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "today": "={{ $json.today }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "count",
+              "displayName": "count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "today",
+              "displayName": "today",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        48
+      ],
+      "id": "769965b6-cdb1-43c6-98f5-944371f54d2e",
+      "name": "Upsert row(s)1",
+      "alwaysOutputData": false
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Upsert row(s)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert row(s)1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "7030165b-7c6b-436c-9435-3a0c837cebbd",
+  "meta": {
+    "instanceId": "2bf18fcf1fe32b9bafc90183cc6c26a104f84192753c91bc8e5598c6d8518bdf"
+  },
+  "nodeGroups": [],
+  "id": "b9tYftffgjL5Q8qC",
+  "tags": []
+}

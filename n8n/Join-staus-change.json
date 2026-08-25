@@ -1,0 +1,156 @@
+{
+  "name": "Join-staus-change",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "status-update",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "dfa6ee41-e3a7-4baa-8d86-d2bac5493d03",
+      "name": "Webhook",
+      "webhookId": "a3a12b65-8c85-4e5b-a27c-e4545323dc2d"
+    },
+    {
+      "parameters": {
+        "url": "=https://join-13fcf-default-rtdb.europe-west1.firebasedatabase.app/tasks/{{ $json.body.taskId }}.json",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "E-mail",
+              "value": "={{ $json[\"E-mail\"] }}"
+            },
+            {
+              "name": "status",
+              "value": "={{ $json.status }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        224,
+        0
+      ],
+      "id": "9bb846c8-04db-462b-971c-b1503100d8f1",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "fromEmail": "dev.h.christopher@gmail.com",
+        "toEmail": "={{ $json[\"E-mail\"] }}",
+        "subject": "=Deine Aufgabe wurde verschoben",
+        "emailFormat": "text",
+        "text": "=Hallo,\n\ndeine Aufgabe „{{ $json.name }}“ wurde in den Status „{{ $json.status }}“ verschoben.\n\nViele Grüße\nIhr Support-Team ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        704,
+        -96
+      ],
+      "id": "0251fdcd-00db-40bd-a3c4-4da100f754eb",
+      "name": "Send an Email1",
+      "webhookId": "d41a08f3-461a-4743-94ee-e6d8f857996c",
+      "credentials": {
+        "smtp": {
+          "id": "jI06QcNG3zcZej0F",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "08c2870d-6d7a-4a61-b6ca-a5ec0a268edb",
+              "leftValue": "={{ $json[\"E-mail\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "7b8c19b0-2e13-431c-a94c-d932495c483c",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send an Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "2d8edfcb-9e58-405c-8210-3ab908548d56",
+  "meta": {
+    "instanceId": "2bf18fcf1fe32b9bafc90183cc6c26a104f84192753c91bc8e5598c6d8518bdf"
+  },
+  "nodeGroups": [],
+  "id": "7j6lBn4R6l84OqS7",
+  "tags": []
+}

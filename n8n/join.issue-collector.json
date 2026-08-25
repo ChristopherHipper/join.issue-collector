@@ -1,0 +1,689 @@
+{
+  "name": "join.issue-collector",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2.1,
+      "position": [
+        -1968,
+        96
+      ],
+      "id": "14dd1f70-b82d-48c8-b69f-ec40d92402de",
+      "name": "Email Trigger (IMAP)",
+      "credentials": {
+        "imap": {
+          "id": "8EGHjWJncPZpjYOZ",
+          "name": "IMAP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Du analysierst eingehende E-Mails und wandelst sie in strukturierte Aufgaben/Tickets um.\n\n### 1. Prüfe zuerst, ob eine Aufgabe vorhanden ist\n\nEine Aufgabe liegt vor, wenn die E-Mail eine konkrete Handlung, Anfrage, Fehlermeldung, Änderung, Umsetzung oder einen Arbeitsauftrag enthält.\n\nKeine Aufgabe liegt vor bei:\n\n* reinen Informationen\n* Newslettern oder Werbung\n* automatischen Benachrichtigungen ohne Handlungsbedarf\n* Terminbestätigungen\n* E-Mails ohne konkrete Handlung\n\nWenn keine Aufgabe vorhanden ist, setze `is_task` auf `false` und lasse die Aufgabenfelder leer.\n\nWenn eine Aufgabe vorhanden ist, setze `is_task` auf `true` und extrahiere die Informationen.\n\n### 2. Regeln\n\n* Erfinde keine Informationen.\n* Verwende ausschließlich Informationen aus der E-Mail und den von n8n bereitgestellten Metadaten.\n* Verwende für `date` ausschließlich das Eingangsdatum in diesem Format: DD.MM.YYYY der E-Mail, niemals ein im Text erwähntes Datum.\n* Entferne Begrüßungen, Signaturen und irrelevante Informationen aus der Beschreibung.\n* Erstelle einen kurzen, aussagekräftigen Titel.\n* `category`: ausschließlich `Technical Task` oder `User Story`.\n* `priority`: ausschließlich `urgent`, `medium` oder `low`.\n  wenn keine Priorität erkennbar ist setze `low`.\n* `status`: immer `triage`.\n* `ai_generated`: immer `true`.\n* `extern`: immer `true`.\n* Erstelle Nebenaufgaben nur, wenn tatsächlich weitere eigenständige Aufgaben vorhanden sind. Sonst `[]`.\n* Wenn eine Information nicht ermittelt werden kann, verwende `\"\"`.\n* Gib ausschließlich gültiges JSON entsprechend dem Structured Output Schema zurück.\n\n### E-Mail\n\nDatum:\n{{ $('Email Trigger (IMAP)').item.json.date }}\n\nAbsender:\n{{ $('Email Trigger (IMAP)').item.json.from }}\n\nBetreff:\n{{ $('Email Trigger (IMAP)').item.json.subject }}\n\nInhalt:\n{{ $('Email Trigger (IMAP)').item.json.textPlain }}\n",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        16,
+        -16
+      ],
+      "id": "c5145dac-7342-4e21-82d7-a59db5809438",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        32,
+        208
+      ],
+      "id": "53e9cda7-5c4d-4750-8762-8b1e9a392b57",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZHLzwF7WagQdU0Ll",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"is_task\": {\n      \"type\": \"boolean\"\n    },\n    \"E-mail\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"ai_generated\": {\n      \"type\": \"boolean\"\n    },\n    \"extern\": {\n      \"type\": \"boolean\"\n    },\n    \"category\": {\n      \"type\": \"string\"\n    },\n    \"username\": {\n      \"type\": \"string\"\n    },\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"description\": {\n      \"type\": \"string\"\n    },\n    \"priority\": {\n      \"type\": \"string\"\n    },\n    \"status\": {\n      \"type\": \"string\"\n    },\n    \"subtasks\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"title\": {\n            \"type\": \"string\"\n          },\n          \"done\": {\n            \"type\": \"boolean\"\n          }\n        },\n        \"required\": [\n          \"title\",\n          \"done\"\n        ]\n      }\n    }\n  },\n  \"required\": [\n    \"is_task\",\n    \"E-mail\",\n    \"date\",\n    \"category\",\n    \"title\",\n    \"priority\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        192,
+        224
+      ],
+      "id": "9ab0f37a-490b-4365-8767-82208dd693cd",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://join-13fcf-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "E-mail",
+              "value": "={{ $json[\"E-mail\"] }}"
+            },
+            {
+              "name": "date",
+              "value": "={{ $json.date }}"
+            },
+            {
+              "name": "category",
+              "value": "={{ $json.category }}"
+            },
+            {
+              "name": "ai_generated",
+              "value": "={{ $json.ai_generated }}"
+            },
+            {
+              "name": "description",
+              "value": "={{ $json.description }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $json.title }}"
+            },
+            {
+              "name": "extern ",
+              "value": "={{ $json.extern }}"
+            },
+            {
+              "name": "username",
+              "value": "={{ $json.username }}"
+            },
+            {
+              "name": "priority",
+              "value": "={{ $json.priority }}"
+            },
+            {
+              "name": "status",
+              "value": "={{ $json.status }}"
+            },
+            {
+              "name": "subtasks",
+              "value": "={{ $json.subtasks }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1008,
+        -64
+      ],
+      "id": "d4db2e36-bcdb-4431-b945-218483a81b5a",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $input.first().json.output;\n\nconst data = typeof output === 'string'\n  ? JSON.parse(output)\n  : output;\n\nreturn {\n  json: data\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        -32
+      ],
+      "id": "0b0a70fb-bf57-4796-8741-3cff479132a7",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2ec98c89-f74a-4dca-8aeb-b4b94d875d2c",
+              "leftValue": "={{ $json.is_task }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        672,
+        -32
+      ],
+      "id": "2a02a771-350f-4dad-8b93-789874149dbf",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "fromEmail": "dev.h.christopher@gmail.com",
+        "toEmail": "={{ $('Email Trigger (IMAP)').item.json.from }}",
+        "subject": "=re: {{ $('Email Trigger (IMAP)').item.json.subject }}",
+        "emailFormat": "text",
+        "text": "Ihre Anfrage wurde erfolgreich in das Kanban mit aufgenommen.\n\nViele Grüße\nIhr Support-Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1280,
+        -64
+      ],
+      "id": "722ec52b-fb77-4d56-b1df-474415d7f79e",
+      "name": "Send an Email",
+      "webhookId": "d41a08f3-461a-4743-94ee-e6d8f857996c",
+      "credentials": {
+        "smtp": {
+          "id": "jI06QcNG3zcZej0F",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "dev.h.christopher@gmail.com",
+        "toEmail": "={{ $('Email Trigger (IMAP)').item.json.from }}",
+        "subject": "=re: {{ $('Email Trigger (IMAP)').item.json.subject }}",
+        "emailFormat": "text",
+        "text": "Vielen Dank für Ihre Nachricht.\n\nIhre Anfrage ist bei uns eingegangen. Das tägliche Limit für die automatische Erstellung von AI-Tickets wurde bereits erreicht. Ihre Anfrage wird daher manuell von unserem Team geprüft und bearbeitet.\n\nVielen Dank für Ihr Verständnis.\n\nViele Grüße\nIhr Support-Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        -128,
+        352
+      ],
+      "id": "2765ab56-8063-4769-9f08-fde8d1ef4b2a",
+      "name": "Send an Email1",
+      "webhookId": "d41a08f3-461a-4743-94ee-e6d8f857996c",
+      "credentials": {
+        "smtp": {
+          "id": "jI06QcNG3zcZej0F",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "dev.h.christopher@gmail.com",
+        "toEmail": "={{ $('Email Trigger (IMAP)').item.json.from }}",
+        "subject": "=re: {{ $('Email Trigger (IMAP)').item.json.subject }}",
+        "emailFormat": "text",
+        "text": "Vielen Dank für Ihre Nachricht.\n\nLeider enthält Ihre E-Mail keine eindeutige bzw. für uns nicht lesbare Aufgabe, sodass wir Ihre Anfrage nicht entsprechend bearbeiten können.\n\nBitte senden Sie uns eine neue E-Mail mit einer klar und verständlich formulierten Aufgabe bzw. Anfrage.\n\nVielen Dank für Ihr Verständnis.\n\nViele Grüße\nIhr Support-Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        864,
+        144
+      ],
+      "id": "7f19ddec-88b2-40c4-8e05-975eb703f5d8",
+      "name": "Send an Email2",
+      "webhookId": "d41a08f3-461a-4743-94ee-e6d8f857996c",
+      "credentials": {
+        "smtp": {
+          "id": "jI06QcNG3zcZej0F",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e62a1bf1-2cc8-40e1-b4f3-b9947c2a5bd8",
+              "leftValue": "={{ $json.count }}",
+              "rightValue": 5,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -432,
+        96
+      ],
+      "id": "f181e1dc-a5c8-45a8-ac66-8f7ccef0ef13",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "vDARYvNLaPxLE6Br",
+          "mode": "list",
+          "cachedResultName": "counter",
+          "cachedResultUrl": "/projects/EhhsDN31Hn4Dskyo/datatables/vDARYvNLaPxLE6Br"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "today",
+              "keyValue": "={{ $json.today }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "count": "={{ $json.count }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "count",
+              "displayName": "count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "today",
+              "displayName": "today",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -800,
+        96
+      ],
+      "id": "56999f25-60d5-488a-bbee-cec1189cb457",
+      "name": "Upsert row(s)",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const count = $input.first().json.count ?? 0;\nconst newCount = count + 1;\n\nreturn [{\n  json: {\n    ...$input.first().json,\n    count: newCount\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1040,
+        96
+      ],
+      "id": "f55e80a3-7a49-411b-9abe-007dfc0ad876",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = new Date().toISOString().split('T')[0];\n\nreturn [\n  {\n    json: {\n      today,\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1728,
+        96
+      ],
+      "id": "c148c906-de04-45ed-a35f-1828fd1a7c44",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "vDARYvNLaPxLE6Br",
+          "mode": "list",
+          "cachedResultName": "counter",
+          "cachedResultUrl": "/projects/EhhsDN31Hn4Dskyo/datatables/vDARYvNLaPxLE6Br"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "today",
+              "keyValue": "={{ $json.today }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -1264,
+        96
+      ],
+      "id": "589beb06-28da-4ab6-ba71-92943615d688",
+      "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "vDARYvNLaPxLE6Br",
+          "mode": "list",
+          "cachedResultName": "counter",
+          "cachedResultUrl": "/projects/EhhsDN31Hn4Dskyo/datatables/vDARYvNLaPxLE6Br"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "today",
+              "keyValue": "={{ $json.today }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "today": "={{ $json.today }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "count",
+              "displayName": "count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "today",
+              "displayName": "today",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -1520,
+        96
+      ],
+      "id": "b2af3b64-d232-4b9d-a056-cc10c38b0123",
+      "name": "Upsert row(s)2",
+      "alwaysOutputData": false
+    }
+  ],
+  "pinData": {
+    "Email Trigger (IMAP)": [
+      {
+        "json": {
+          "textHtml": "<html>\r\n<head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">\r\n<style type=\"text/css\" style=\"display:none;\"> P {margin-top:0;margin-bottom:0;} </style>\r\n</head>\r\n<body dir=\"ltr\">\r\n<div class=\"elementToProof\" style=\"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\r\nHallo,</div>\r\n<div class=\"elementToProof\" style=\"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\r\n<br>\r\n</div>\r\n<div class=\"elementToProof\" style=\"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\r\nIch brauche ganz dringend den zurück button in rot.</div>\r\n<div class=\"elementToProof\" style=\"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\r\n<br>\r\n</div>\r\n<div class=\"elementToProof\" style=\"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\r\nNebenbei kannst du noch die docs weiter schreiben.</div>\r\n<div class=\"elementToProof\" style=\"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\r\n<br>\r\n</div>\r\n<div class=\"elementToProof\" style=\"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\r\nDanke.</div>\r\n<div class=\"elementToProof\" style=\"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\r\n<br>\r\n</div>\r\n<div class=\"elementToProof\" style=\"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\r\nGrüße</div>\r\n<div class=\"elementToProof\" style=\"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\r\nChristopher hipper</div>\r\n</body>\r\n</html>\r\n",
+          "textPlain": "Hallo,\r\n\r\nIch brauche ganz dringend den zurück button in rot.\r\n\r\nNebenbei kannst du noch die docs weiter schreiben.\r\n\r\nDanke.\r\n\r\nGrüße\r\nChristopher hipper\r\n",
+          "metadata": {
+            "delivered-to": "dev.h.christopher@gmail.com",
+            "received": "by 2002:ac8:5391:0:b0:51c:2e26:348d with SMTP id x17csp5656679qtp; Tue, 25 Aug 2026 07:24:34 -0700 (PDT)",
+            "x-received": "by 2002:a05:6871:e7:b0:459:678:ea08 with SMTP id 586e51a60fabf-46448ec2933mr6404356fac.8.1787667873801; Tue, 25 Aug 2026 07:24:33 -0700 (PDT)",
+            "arc-seal": "i=1; a=rsa-sha256; t=1787667873; cv=none; d=google.com; s=arc-20260327; b=MyZDwAi57xuJl1Yo1AWiudb1USU7DKiGx687mVpUHVdunnCOdaERJ5EVLhYdlco6a+ hz4DHAh7hN9ACrK5GKaZKGxgAt1vDXMkGTGWdCQy6CpAwDyE/uww27delPzByrtYtiA+ lozBF3I24+3tvug+1cZfCcQ4ehvztP9fZLA39vCkSn6s91RMH0B/TfP1lyyTkIK8ojwC eTjK7xYFGv5+dRxtvEz3Zk3YhbjxuX3wsMe2czEQHGfegmfdreaJRtddAiNYciu2CftI KoUcOZnl3gGS2TzoqcLaEEngqBDwr9/dLIXnbPU0AnYrl0pGDMfmQSF4H8bp+e7vY/mh 7DVw==",
+            "arc-message-signature": "i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327; h=mime-version:msip_labels:content-language:accept-language :message-id:date:thread-index:thread-topic:subject:to:from :dkim-signature; bh=ACAga/NgAdc2coBKEn5yIPACqL7oXHGeiTyqQu+4ln8=; fh=RuItGFZ5g/WLVgsVCUmo2nvSkdMRJ3c3w/xMg9gzvN0=; b=JGCC3rXieqD6O4hP1L3clipDgL3yDc3dSSy01OEOI7iY3v6U5A0ZxcwYB85MhASa+v ZxM3MV2e/FTtX+kuA3qVzTnlCzrdOV4tAB1I0ZwVn+lyHy2vvennQug8z9iUcRZ/j/hb 9i2IoV+X46lW2rnFsWtfATWKKBl2/yD0X9/7Tz9tE7gewVLndQ5UqviZk2/ylzDT1A7X G/uwIJ7xfWloXxmCUf6F6PXd/uoFd9S4IaA8nEIwWXToiNreIuiHixkTBzU/DKSXy9aQ SB8r8fdcnMWUPuLTyYxf/L2vqlCmInGru+NXAkNsu61uEYYS/w45Uo3b9NB2UuhQ/+6K Q7lQ==; dara=google.com",
+            "arc-authentication-results": "i=1; mx.google.com; dkim=pass header.i=@gmail.com header.s=20251104 header.b=NK0J+qNz; spf=pass (google.com: domain of hipper.christopher@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=hipper.christopher@gmail.com; dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com; dara=pass header.i=@gmail.com",
+            "return-path": "<hipper.christopher@gmail.com>",
+            "received-spf": "pass (google.com: domain of hipper.christopher@gmail.com designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;",
+            "authentication-results": "mx.google.com; dkim=pass header.i=@gmail.com header.s=20251104 header.b=NK0J+qNz; spf=pass (google.com: domain of hipper.christopher@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=hipper.christopher@gmail.com; dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com; dara=pass header.i=@gmail.com",
+            "dkim-signature": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20251104; t=1787667873; x=1788272673; dara=google.com; h=mime-version:content-type:msip_labels:content-language :accept-language:message-id:date:thread-index:thread-topic:subject :to:from:from:to:cc:subject:date:message-id:reply-to:content-type; bh=ACAga/NgAdc2coBKEn5yIPACqL7oXHGeiTyqQu+4ln8=; b=NK0J+qNz3y3jJkTchyJjs9DsrFh8xVYqAL7YTvG2E98F+65OHxNTZan5MYgoAZMJaf 2lOKVJsyqDgMZp+0EbuQVCWyfWFABxaodnBxHyFZvfBVhuvb2BDFmEJtDsLpk15MG6YX wX+6Wa+fVBAX+Lb/AyQujoAZPuoy1l+1WSAxG56gwtHYQxi94jWFZkRQXvXN1G3903jM IhhdzjH6S+l+tfLwNLfc//795O3bqiO/D6b129Io6ixHaYFJLU2VQIR7yFJrEv2xPdXi JK8diZCs7+CeNyvbDsRkc0Rq0nFCMYwg4P5dk2O7aBWQMHlP1stWvh9eDfp1XgeTO+fD aVhw==",
+            "x-google-dkim-signature": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20251104; t=1787667873; x=1788272673; h=mime-version:content-type:msip_labels:content-language :accept-language:message-id:date:thread-index:thread-topic:subject :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date :message-id:reply-to:content-type; bh=ACAga/NgAdc2coBKEn5yIPACqL7oXHGeiTyqQu+4ln8=; b=FBckfk2Wr8UAS4DPYEVLG2tY6rKKUdvmaNRrOvsJjCXBWyvju3lXEjEhWOeHSYmVBE OVlKnMzqNVx1yb6vHICrFPyRrBZab12TdjhsD6qSiUxTjqK0wipAE9wjVRy/2+TeqbcO IH64GuQhpuHNLURi8zeT9QBLGqiTzbnmt44JBIvt9pytpxyZGb6WetSz4pYbc32K1dNX DbHThB9OsC0gSL0wsdB6Tod+KV0ApKazjhw2GyI78tJflDN2XKkafWEzoUiVWZ3WVfca 9cyomiLF2cTU0AfFlNnGBL3RLkQbOvitIFghwhBCFZZv4/txFAtaDZgUQY6uPxAdVVSw jeLQ==",
+            "x-gm-message-state": "AFuF++nSowEchJEqCeu5n5qVBr4F7+fqPvxcx1DwqIAOJAeYerZTG+2s CTcD6VTZp8B57agU1Ql8MB1XLkunSRNPmkVoxj5WMdSo5jud3D6BStJb5GKvxQ==",
+            "x-gm-gg": "AR+sD12PUktxRSkpAvHZ1IZRA1sSYOaehtCw2luWOh3UMt5yFe7LpF9WYSL9qOi8lEW oY6yP8ncbjgF5+LUY9I+eKQS6Vzt0+OdE8jBJSdpsqOW//AcK1d7a+bEX7hFAo0w9/5LAovqLq+ GwnnK6UO0EkAN+BOWyeCKHv1zS/gAoLXY2M6T7aLa/9/ugaAmVDDQ8uvYhJ1KjR93scLzV8x2rF HQSmGn2B/0DhlEZHJuEW6T3dIDIjSC5URD6x8ahL9wYZ7k/VcdRRgnXHvSIyEiOXCw9Et5iHHcX tZ2X8P42M199+XSUfYDC33DqXgYK81WEk0aYOs673WXV/TtO8XLn1h4eBHmaUO84V9fAGDWn8hH 1/oFgu2N3dlpL6Hen4zPde2mWNKASkcSVV6i4wpqmpztMeXtqilhmUfJ9CdDj3SQJn8bz7+uyCk yeDOhht/eWnvAFjQ0FwJMqojDEFK12Nz2Tgw7OdwASHhETMA7jYBii3Z17lMGYz79qGKgDU0mdu krTFOSIVOnXjnQaJbCTTXCFHUYY2TU7SaxwnQMp1Wak9a3GSaLk8SaxWjcYge78YA1C0Pt3Rx1o S1lGwFtbre5tpXw=",
+            "thread-topic": "Aufgabe",
+            "thread-index": "AQHdNJ1uGGVoi8HlXUmBFfxVf8gwbw==",
+            "x-ms-exchange-messagesentrepresentingtype": "1",
+            "message-id": "<DU4P193MB2608286DC30B77E1057E8771ABAF2@DU4P193MB2608.EURP193.PROD.OUTLOOK.COM>",
+            "accept-language": "de-DE, en-US",
+            "content-language": "de-DE",
+            "x-ms-has-attach": "",
+            "x-ms-exchange-organization-scl": "-1",
+            "x-ms-tnef-correlator": "",
+            "x-ms-exchange-organization-recordreviewcfmtype": "0",
+            "msip_labels": "",
+            "content-type": "multipart/alternative; boundary=\"_000_DU4P193MB2608286DC30B77E1057E8771ABAF2DU4P193MB2608EURP_\"",
+            "mime-version": "1.0"
+          },
+          "attributes": {
+            "uid": 63
+          },
+          "from": "Christopher Hipper <hipper.christopher@gmail.com>",
+          "to": "\"dev.h.christopher@gmail.com\" <dev.h.christopher@gmail.com>",
+          "subject": "Aufgabe",
+          "date": "Tue, 25 Aug 2026 14:24:26 +0000"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Email Trigger (IMAP)": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send an Email2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send an Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert row(s)": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Upsert row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Upsert row(s)2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert row(s)2": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "7ba65dba-9f7d-4f34-83b2-11d1a5fd095f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2bf18fcf1fe32b9bafc90183cc6c26a104f84192753c91bc8e5598c6d8518bdf"
+  },
+  "nodeGroups": [],
+  "id": "aGqbCjIG4NwFzMNW",
+  "tags": []
+}
